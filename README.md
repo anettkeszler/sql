@@ -89,6 +89,169 @@ WHERE condition
 
 More complex clauses can be constructed by joining numerous AND or OR logical keywords (ie. num_wheels >= 4 AND doors <= 2). And below are some useful operators that you can use for numerical data (ie. integer or floating point):
 
+![alt text](images/sql.png)
+
+In addition to making the results **more manageable** to understand, writing clauses to constrain the set of rows returned also allows the query to **run faster due to the reduction in unnecessary data** being returned.
+
+
+**Exercise2**
+
+_Table: Movies_
+
+1. Find the movie with a row id of 6
+```
+SELECT title
+FROM movies
+WHERE id=6;
+```
+
+2. Find the movies released in the years between 2000 and 2010
+```
+SELECT title
+FROM movies
+WHERE year BETWEEN 2000 AND 2010;
+```
+
+3. Find the movies not released in the years between 2000 and 2010
+```
+SELECT title
+FROM movies
+WHERE year NOT BETWEEN 2000 AND 2010;
+```
+
+4. Find the first 5 Pixar movies and their release year
+```
+SELECT title, year
+FROM movies
+WHERE id<6;
+```
+
+## Lesson3: Queries with constraints 2
+
+When writing **WHERE** clauses with columns containing text data, SQL supports a number of useful operators to do things like case-insensitive string comparison and wildcard pattern matching. We show a few common text-data specific operators below:
+
+
+![alt text](images/sql2.png)
+
+All strings must be quoted so that the query parser can distinguish words in the string from SQL keywords.
+
+**Exercise3**
+
+_Table: Movies_
+
+1. Find all the Toy Story movies
+```
+SELECT title
+FROM movies
+WHERE title LIKE "%Toy Story%";
+```
+
+2. Find all the movies directed by John Lasseter
+```
+SELECT title
+FROM movies
+WHERE director="John Lasseter";
+```
+
+3. Find all the movies (and director) not directed by John Lasseter
+```
+SELECT title, director
+FROM movies
+WHERE director!="John Lasseter";
+```
+
+4. Find all the WALL-* movies
+```
+SELECT *
+FROM movies
+WHERE title LIKE "WALL-_";
+```
+
+## Lesson4: Filtering and sorting query results 
+
+DISTINCT keyword: provides a convenient way to discard rows that have a duplicate column value.
+
+Select query with unique results
+```
+SELECT DISTINCT column, another_column
+FROM mytable
+WHERE condition;
+```
+
+**Ordering results**
+
+SQL provides a way to sort your results by a given column in ascending or descending order using the **ORDER BY** clause.
+
+Select query with ordered results:
+```
+SELECT column, another_column
+FROM mytable
+WHERE condition(s)
+ORDER BY column ASC/DESC;
+```
+
+When an ORDER BY clause is specified, each row is sorted alpha-numerically based on the specified column's value.
+
+**Limiting results to a subset**
+
+Another clause which is commonly used with the ORDER BY clause are the **LIMIT** and **OFFSET** clauses, which are a useful optimization to indicate to the database the subset of the results you care about.
+
+Select query with limited rows:
+```
+SELECT column, another_column
+FROM mytable
+WHERE condition(s)
+ORDER BY column ASC/DESC
+LIMIT num_limit OFFSET num_offset;
+```
+
+**Exercise4**
+
+_Table: Movies_
+
+1. List all directors of Pixar movies (alphabetically), without duplicates
+```
+SELECT DISTINCT director
+FROM movies
+ORDER BY director ASC;
+```
+
+2. List the last four Pixar movies released (ordered from most recent to least)
+```
+SELECT *
+FROM movies
+ORDER BY year DESC
+LIMIT 4;
+```
+
+3. List the first five Pixar movies sorted alphabetically 
+```
+SELECT * 
+FROM movies
+ORDER BY title ASC
+LIMIT 5;
+```
+
+4. List the next five Pixar movies sorted alphabetically
+```
+SELECT *
+FROM movies
+ORDER BY title ASC
+LIMIT 5 OFFSET 5;
+```
+
+## Review simple SELECT queries
+```
+SELECT column, another_column, …
+FROM mytable
+WHERE condition(s)
+ORDER BY column ASC/DESC
+LIMIT num_limit OFFSET num_offset;
+```
+
+
+
+
 
 
 
