@@ -249,12 +249,185 @@ ORDER BY column ASC/DESC
 LIMIT num_limit OFFSET num_offset;
 ```
 
+## Lesson6: Multi-table queries with JOINs
+
+Tables that share information about a single entity need to have a primary key that identifies that entity uniquely across the database. One common primary key type is an auto-incrementing integer (because they are space efficient), but it can also be a string, hashed value, so long as it is unique.
+
+Using the *JOIN* clause in a query, we can combine row data across two separate tables using this unique key. The first of the joins that we will introduce is the *INNER JOIN*.
+
+```
+Select query with INNER JOIN on multiple tables:
+
+SELECT column, another_column
+FROM mytable
+INNER JOIN another_table 
+    ON mytable.id = another_table.id
+WHERE condition(s)
+ORDER BY column ASC/DESC
+LIMIT num_limit OFFSET num_offset;
+```
+
+The *INNER JOIN* is a process that matches rows from the first table and the second table which have the same key (as defined by the ON constraint) to create a result row with the combined columns from both tables. After the tables are joined, the other clauses we learned previously are then applied.
+
+**Exercise6**
+
+1. Find the domestic and international sales for each movie 
+```
+SELECT title, domestic_sales, international_sales
+FROM movies
+INNER JOIN boxoffice
+  ON movies.id=boxoffice.movie_id;
+```
+
+2. Show the sales numbers for each movie that did better internationally rather than domestically 
+```
+SELECT title, domestic_sales, international_sales 
+FROM movies
+INNER JOIN boxoffice
+    ON movies.id=boxoffice.movie_id
+WHERE international_sales > domestic_sales;
+```
+3. List all the movies by their ratings in descending order 
+```
+SELECT title, rating 
+FROM movies
+INNER JOIN boxoffice
+    ON movies.id = boxoffice.movie_id
+ORDER BY rating DESC;
+```
+
+## Lesson7: Other JOINs
+
+If the two tables have asymmetric data, which can easily happen when data is entered in different stages, then we would have to use a *LEFT JOIN*, *RIGHT JOIN* or *FULL JOIN* instead to ensure that the data you need is not left out of the results.
+
+Select query with LEFT/RIGHT/FULL JOINs on multiple tables:
+
+```
+SELECT column, another_column, …
+FROM mytable
+INNER/LEFT/RIGHT/FULL JOIN another_table 
+    ON mytable.id = another_table.matching_id
+WHERE condition(s)
+ORDER BY column, … ASC/DESC
+LIMIT num_limit OFFSET num_offset;
+```
+
+Like the INNER JOIN these three new joins have to specify which column to join the data on.
+When joining table A to table B, a LEFT JOIN simply includes rows from A regardless of whether a matching row is found in B. The RIGHT JOIN is the same, but reversed, keeping rows in B regardless of whether a match is found in A. Finally, a FULL JOIN simply means that rows from both tables are kept, regardless of whether a matching row exists in the other table.
+
+**Exercise7**
+
+1. Find the list of all buildings that have employees
+```
+SELECT DISTINCT building
+FROM employees;
+```
+
+2. Find the list of all buildings and their capacity
+
+3. List all buildings and the distinct employee roles in each building (including empty buildings) 
+
+```
+SELECT DISTINCT building_name, role 
+FROM buildings 
+LEFT JOIN employees
+    ON building_name = building;
+```
+
+## Lesson8: NULL 
+
+we are going to quickly talk about NULL values in an SQL database.
+It's always good to reduce the possibility of NULL values in databases because they require special attention when constructing queries, constraints (certain functions behave differently with null values) and when processing the results.
+
+An alternative to NULL values in your database is to have *data-type appropriate default values*, like 0 for numerical data, empty strings for text data, etc. But if your database needs to store incomplete data, then NULL values can be appropriate if the default values will skew later analysis (for example, when taking averages of numerical data).
+
+Sometimes, it's also not possible to avoid NULL values, as we saw in the last lesson when outer-joining two tables with asymmetric data. In these cases, you can test a column for NULL values in a WHERE clause by using either the IS NULL or IS NOT NULL constraint.
+
+```
+Select query with constraints on NULL values: 
+
+SELECT column, another_column, …
+FROM mytable
+WHERE column IS/IS NOT NULL
+AND/OR another_condition
+AND/OR …;
+```
+
+**Exercise8**
+
+1. Find the name and role of all employees who have not been assigned to a building 
+```
+SELECT name, role 
+FROM employees
+WHERE building IS NULL;
+```
+
+2. Find the names of the buildings that hold no employees
+
+```
+SELECT DISTINCT building_name
+FROM buildings 
+  LEFT JOIN employees
+    ON building_name = building
+WHERE role IS NULL;
+```
 
 
+## Lesson 17: Altering tables 
+
+SQL provides a way for you to update your corresponding tables and database schemas by using the ALTER TABLE statement to add, remove, or modify columns and table constraints.
+
+#### Adding coloumns
+
+You need to specify the data type of the column along with any potential table constraints and default values to be applied to both existing and new rows. In some databases like MySQL, you can even specify where to insert the new column using the FIRST or AFTER clauses, though this is not a standard feature.
+```
+ALTER TABLE mytable
+ADD column DataType OptionalTableConstraint 
+    DEFAULT default_value;
+```
+
+#### Removing coloumns
+```
+ALTER TABLE mytable
+DROP column_to_be_deleted;
+```
+
+#### Renaming the table
+```
+ALTER TABLE mytable
+RENAME TO new_table_name;
+```
+
+**Exercise17:**
+1. Add a column named Aspect_ratio with a FLOAT data type to store the aspect-ratio each movie was released in.
+```
+ALTER TABLE movies
+ADD column Aspect_ratio FLOAT DEFAULT 0.0;
+```
+
+2. Add another column named Language with a TEXT data type to store the language that the movie was released in. Ensure that the default for this language is English.
+```
+ALTER TABLE movies
+ADD column Language TEXT DEFAULT "English";
+```
 
 
+## Lesson 18: Dropping tables 
+
+To remove an entire table including all of its data and metadata, and to do so, you can use the *DROP TABLE* statement, which differs from the *DELETE* statement in that it also removes the table schema from the database entirely.
+
+```
+DROP TABLE IF EXISTS mytable;
+```
+
+Like the CREATE TABLE statement, the database may throw an error if the specified table does not exist, and to suppress that error, you can use the *IF EXISTS* clause.
+
+In addition, if you have another table that is dependent on columns in table you are removing (for example, with a FOREIGN KEY dependency) then you will have to either update all dependent tables first to remove the dependent rows or to remove those tables entirely.
 
 
+ Questions:
+
+ Database normalization
 
 
 
