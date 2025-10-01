@@ -148,7 +148,17 @@ Here are some common aggregate functions that we are going to use in our example
 
 ![alt text](images/sql3.png)
 
+The **GROUP BY** clause works by grouping rows that have the same value in the column specified.
 
+**HAVING** clause is used specifically with the GROUP BY clause to allow us to filter grouped rows from the result set. The HAVING clause constraints are written the same way as the WHERE clause constraints, and are applied to the grouped rows.
+
+```
+SELECT AGG_FUNC(column_or_expression) AS aggregate_description, …
+FROM mytable
+WHERE constraint_expression
+GROUP BY column
+HAVING group_condition;
+```
 #### Order of execution of a query
 ```
 5. SELECT 6. DISTINCT column, AGG_FUNC(column_or_expression), …
