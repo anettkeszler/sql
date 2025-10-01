@@ -1,5 +1,89 @@
+# SQL 
+source: sqlbolt.com
+
+SQL (**Structured Query Language**) is a language designed to allow users to query, manipulate and transform data from a relational database.
+
+A **relational database** represents a collection of related (two-dimensional) tables.
+
+Each of the **tables** are similar to an Excel spreadsheet, with a fixed number of named columns (the attributes or properties of the table) and any number of rows (entity, instance) of data.
+
+Some SQL databases: SQLite, MySQL, PostgresQL, Oracle and Microsoft SQL Server.
+SQL databases provide safe and scalable storage for millions of websites and mobile applications.
+
+### SELECT queries
+
+A **query** in itself is just a statement which declares what data we are looking for, where to find it in the database, and optionally, how to transform it before it is returned.
+
+Select query for a specific columns: 
+```
+SELECT column, another_column
+FROM mytable;
+```
+
+To retrieve all the columns of data from the table:
+```
+SELECT * 
+FROM mytable;
+```
+
+#### Queries with constraints
+
+In order to filter certain results from being returned, we need to use a **WHERE** clause in the query. The clause is applied to each row of data by checking specific column values to determine whether it should be included in the results or not. 
+
+It makes the result **more managable to understand**, and allows the query **run faster** due to the reduction in unnecessary data being returned. 
+```
+SELECT column, another_column
+FROM mytable
+WHERE condition
+  AND/OR another_condition
+  AND/OR ...;
+```
+
+Below are some useful operators that you can use for numerical data (ie. **integer or floating point**):
+
+![alt text](images/sql.png)
+
+SQL supports a number of useful **text-data specific operators** (**case-insensitive string comparison, wildcard pattern matching**):  
+
+![alt text](images/sql2.png)
+
+All strings must be quoted so that the query parser can distinguish words in the string from SQL keywords.
+
+
+**DISTINCT** keyword: provides a convenient way to discard rows that have a duplicate column value, it gives a unique result.
+
+```
+SELECT DISTINCT column, another_column
+FROM mytable
+WHERE condition;
+```
+
+SQL provides a way to sort your results by a given column in ascending or descending order using the **ORDER BY** clause. When an ORDER BY clause is specified, each row is sorted alpha-numerically based on the specified column's value.
+```
+SELECT column, another_column
+FROM mytable
+WHERE condition(s)
+ORDER BY column ASC/DESC;
+```
+Another clause which is commonly used with the ORDER BY clause are the **LIMIT** and **OFFSET** clauses, which are a useful optimization to indicate to the database the subset of the results you care about. 
+
+**The LIMIT will reduce the number of rows to return, and the optional OFFSET will specify where to begin counting the number rows from.**
+```
+SELECT column, another_column
+FROM mytable
+WHERE condition(s)
+ORDER BY column ASC/DESC
+LIMIT num_limit OFFSET num_offset;
+```
+
+
+
+
+
+
+
 ### SQL Schema 
-In SQL, the database *schema* is what describes the structure of each table, and the datatypes that each column of the table can contain. (e.g. year column must be an Integer, title column must be a String). 
+In SQL, the database **schema** is what describes the structure of each table, and the datatypes that each column of the table can contain. (e.g. year column must be an Integer, title column must be a String). 
 
 A table is a two-dimensional set of rows and columns, with the columns being the properties and the rows being instances of the entity in the table. 
 
@@ -120,7 +204,7 @@ DROP TABEL IF EXISTS mytable;
 ``` 
 To remove an entire table including all of its data and metadata. It also removes the table schema from the database entirily. (Compare to DELETE)
 
-*IF EXISTS*  clause: the database may throw an error if the specified table does not exists and to avoid this error we use IF EXISTS clause. 
+**IF EXISTS**  clause: the database may throw an error if the specified table does not exists and to avoid this error we use IF EXISTS clause. 
 
 In addition, if you have another table that is dependent on columns in table you are removing (for example, with a FOREIGN KEY dependency) then you will have to either update all dependent tables first to remove the dependent rows or to remove those tables entirely.
 
