@@ -103,11 +103,42 @@ LIMIT num_limit OFFSET num_offset;
 
 - **FULL JOIN**: simply means that rows from both tables are kept, regardless of whether a matching row exists in the other table.
 
+**NULLS:**
+
 When using any of these new joins, you will likely have to write additional logic to deal with **NULLs** in the result and constraints. 
 
+It's always good to reduce the possibility of NULL values in databases because they require special attention when constructing queries, constraints (certain functions behave differently with null values) and when processing the results.
 
+An alternative to NULL values in your database is to have **data-type appropriate default values**, like 0 for numerical data, empty strings for text data, etc. 
 
+Sometimes, it's also not possible to avoid NULL values, as we saw in the last lesson when outer-joining two tables with asymmetric data. In these cases, you can test a column for NULL values in a WHERE clause by using either the IS NULL or IS NOT NULL constraint.
+```
+SELECT column, another_column, …
+FROM mytable
+WHERE column IS/IS NOT NULL
+AND/OR another_condition
+AND/OR …;
+```
 
+#### Queries with expressions
+
+You can use expressions to write more complex logic on column values in query.
+```
+SELECT speed / 2 AS half_speed
+FROM physics_data
+WHERE ABS(position) * 10.0 > 500;
+```
+
+The use of expressions can save time and extra post-processing of the result data, but can also make the query harder to read, so we recommend that when expressions are used in the SELECT part of the query, that they are also given a descriptive alias using the AS keyword.
+
+In addition to expressions, regular columns and even tables can also have aliases to make them easier to reference in the output and as a part of simplifying more complex queries.
+
+```
+SELECT column AS better_column_name, …
+FROM a_long_widgets_table_name AS mywidgets
+INNER JOIN widget_sales
+  ON mywidgets.id = widget_sales.widget_id;
+```
 
 
 ### SQL Schema 

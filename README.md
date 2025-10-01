@@ -375,6 +375,9 @@ WHERE role IS NULL;
 ```
 
 
+
+
+
 ### SQL Schema 
 In SQL, the database *schema* is what describes the structure of each table, and the datatypes that each column of the table can contain. (e.g. year column must be an Integer, title column must be a String). 
 
