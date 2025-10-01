@@ -140,6 +140,29 @@ INNER JOIN widget_sales
   ON mywidgets.id = widget_sales.widget_id;
 ```
 
+#### Queries with aggrergates
+
+Aggregate expressions or functions allows you to summerize information about a group of rows of data.
+
+Here are some common aggregate functions that we are going to use in our examples:
+
+![alt text](images/sql3.png)
+
+
+#### Order of execution of a query
+```
+5. SELECT 6. DISTINCT column, AGG_FUNC(column_or_expression), …
+1.FROM mytable
+1.JOIN another_table
+      ON mytable.column = another_table.column
+2. WHERE constraint_expression
+3. GROUP BY column
+4. HAVING constraint_expression
+7. ORDER BY column ASC/DESC
+8. LIMIT count OFFSET COUNT;
+```
+
+Each query begins with finding the data that we need in a database, and then filtering that data down into something that can be processed and understood as quickly as possible. Because each part of the query is executed sequentially, it's important to understand the order of execution so that you know what results are accessible where.
 
 ### SQL Schema 
 In SQL, the database **schema** is what describes the structure of each table, and the datatypes that each column of the table can contain. (e.g. year column must be an Integer, title column must be a String). 
