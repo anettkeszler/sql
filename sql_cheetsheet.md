@@ -76,6 +76,34 @@ ORDER BY column ASC/DESC
 LIMIT num_limit OFFSET num_offset;
 ```
 
+#### Multi-table queries with JOINs
+
+Entity data in the real world is often broken down into pieces and stored across multiple orthogonal tables using a process known as normalization. 
+**Database normalization** minimizes duplicate data in the table and allows for data to grow independently of each other. (reduce data redundancy and improve data integrity)
+
+Using **JOIN** clause can combine row data across two separate tables via using a unique **PRIMARY KEY**. 
+
+```
+SELECT column, another_table_column, …
+FROM mytable
+INNER / LEFT / RIGHT / FULL JOIN another_table 
+    ON mytable.id = another_table.id
+WHERE condition(s)
+ORDER BY column, … ASC/DESC
+LIMIT num_limit OFFSET num_offset;
+```
+
+- **INNER JOIN**: matches rows from the first table and the second table which has the same key to create a result row with the combined columns from both tables. 
+
+- **LEFT / RIGHT / FULL JOIN**: if the two tables have asymmetric data we use this to ensure that the data we need in not left out of the results. 
+
+- **LEFT JOIN**: when joining table A and table B, LEFT JOIN includes rows from table A regardless of whether a matching row is found in table B. 
+
+- **RIGHT JOIN**: is the same, but reversed, keeping rows in table B regardless of whether a match is found in table A. 
+
+- **FULL JOIN**: simply means that rows from both tables are kept, regardless of whether a matching row exists in the other table.
+
+When using any of these new joins, you will likely have to write additional logic to deal with **NULLs** in the result and constraints. 
 
 
 
@@ -149,7 +177,7 @@ If there already exists a table with the same name, the SQL implementation will 
 
 Each column can have additional table constraints on it which limit what values can be inserted into that column. 
 
-- PRIMARY KEY: The values in this column are unique, and each value can be used to identify a single row in this table.
+- PRIMARY KEY: The values in this column are unique, and each value can be used to identify a single row in this table. (e.g. auto-increment integer -space efficient -, but can be string or hashed value, as long as they are unique)
 
 - AUTOINCREMENT: The value is automatically filled in and incremented with each row insertion
 
