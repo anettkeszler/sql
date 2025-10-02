@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>sql_cheetsheet.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="sql">SQL</h1>
+<p>source: sqlbolt.com</p>
+<p>SQL (<strong>Structured Query Language</strong>) is a language designed to allow users to query, manipulate and transform data from a relational database.</p>
+<p>A <strong>relational database</strong> represents a collection of related (two-dimensional) tables.</p>
+<p>Each of the <strong>tables</strong> are similar to an Excel spreadsheet, with a fixed number of named columns (the attributes or properties of the table) and any number of rows (entity, instance) of data.</p>
+<p>Some SQL databases: SQLite, MySQL, PostgresQL, Oracle and Microsoft SQL Server.
+SQL databases provide safe and scalable storage for millions of websites and mobile applications.</p>
+<h3 id="select-queries">SELECT queries</h3>
+<p>A <strong>query</strong> in itself is just a statement which declares what data we are looking for, where to find it in the database, and optionally, how to transform it before it is returned.</p>
+<p>Select query for a specific columns:</p>
+<pre class="hljs"><code><div>SELECT column, another_column
+FROM mytable;
+</div></code></pre>
+<p>To retrieve all the columns of data from the table:</p>
+<pre class="hljs"><code><div>SELECT * 
+FROM mytable;
+</div></code></pre>
+<h4 id="queries-with-constraints">Queries with constraints</h4>
+<p>In order to filter certain results from being returned, we need to use a <strong>WHERE</strong> clause in the query. The clause is applied to each row of data by checking specific column values to determine whether it should be included in the results or not.</p>
+<p>It makes the result <strong>more managable to understand</strong>, and allows the query <strong>run faster</strong> due to the reduction in unnecessary data being returned.</p>
+<pre class="hljs"><code><div>SELECT column, another_column
+FROM mytable
+WHERE condition
+  AND/OR another_condition
+  AND/OR ...;
+</div></code></pre>
+<p>Below are some useful operators that you can use for numerical data (ie. <strong>integer or floating point</strong>):</p>
+<p><img src="images/sql.png" alt="alt text"></p>
+<p>SQL supports a number of useful <strong>text-data specific operators</strong> (<strong>case-insensitive string comparison, wildcard pattern matching</strong>):</p>
+<p><img src="images/sql2.png" alt="alt text"></p>
+<p>All strings must be quoted so that the query parser can distinguish words in the string from SQL keywords.</p>
+<p><strong>DISTINCT</strong> keyword: provides a convenient way to discard rows that have a duplicate column value, it gives a unique result.</p>
+<pre class="hljs"><code><div>SELECT DISTINCT column, another_column
+FROM mytable
+WHERE condition;
+</div></code></pre>
+<p>SQL provides a way to sort your results by a given column in ascending or descending order using the <strong>ORDER BY</strong> clause. When an ORDER BY clause is specified, each row is sorted alpha-numerically based on the specified column's value.</p>
+<pre class="hljs"><code><div>SELECT column, another_column
+FROM mytable
+WHERE condition(s)
+ORDER BY column ASC/DESC;
+</div></code></pre>
+<p>Another clause which is commonly used with the ORDER BY clause are the <strong>LIMIT</strong> and <strong>OFFSET</strong> clauses, which are a useful optimization to indicate to the database the subset of the results you care about.</p>
+<p><strong>The LIMIT will reduce the number of rows to return, and the optional OFFSET will specify where to begin counting the number rows from.</strong></p>
+<pre class="hljs"><code><div>SELECT column, another_column
+FROM mytable
+WHERE condition(s)
+ORDER BY column ASC/DESC
+LIMIT num_limit OFFSET num_offset;
+</div></code></pre>
+<h4 id="multi-table-queries-with-joins">Multi-table queries with JOINs</h4>
+<p>Entity data in the real world is often broken down into pieces and stored across multiple orthogonal tables using a process known as normalization.
+<strong>Database normalization</strong> minimizes duplicate data in the table and allows for data to grow independently of each other. (reduce data redundancy and improve data integrity)</p>
+<p>Using <strong>JOIN</strong> clause can combine row data across two separate tables via using a unique <strong>PRIMARY KEY</strong>.</p>
+<pre class="hljs"><code><div>SELECT column, another_table_column, …
+FROM mytable
+INNER / LEFT / RIGHT / FULL JOIN another_table 
+    ON mytable.id = another_table.id
+WHERE condition(s)
+ORDER BY column, … ASC/DESC
+LIMIT num_limit OFFSET num_offset;
+</div></code></pre>
+<ul>
+<li>
+<p><strong>INNER JOIN</strong>: matches rows from the first table and the second table which has the same key to create a result row with the combined columns from both tables.</p>
+</li>
+<li>
+<p><strong>LEFT / RIGHT / FULL JOIN</strong>: if the two tables have asymmetric data we use this to ensure that the data we need in not left out of the results.</p>
+</li>
+<li>
+<p><strong>LEFT JOIN</strong>: when joining table A and table B, LEFT JOIN includes rows from table A regardless of whether a matching row is found in table B.</p>
+</li>
+<li>
+<p><strong>RIGHT JOIN</strong>: is the same, but reversed, keeping rows in table B regardless of whether a match is found in table A.</p>
+</li>
+<li>
+<p><strong>FULL JOIN</strong>: simply means that rows from both tables are kept, regardless of whether a matching row exists in the other table.</p>
+</li>
+</ul>
+<p><strong>NULLS:</strong></p>
+<p>When using any of these new joins, you will likely have to write additional logic to deal with <strong>NULLs</strong> in the result and constraints.</p>
+<p>It's always good to reduce the possibility of NULL values in databases because they require special attention when constructing queries, constraints (certain functions behave differently with null values) and when processing the results.</p>
+<p>An alternative to NULL values in your database is to have <strong>data-type appropriate default values</strong>, like 0 for numerical data, empty strings for text data, etc.</p>
+<p>Sometimes, it's also not possible to avoid NULL values, as we saw in the last lesson when outer-joining two tables with asymmetric data. In these cases, you can test a column for NULL values in a WHERE clause by using either the IS NULL or IS NOT NULL constraint.</p>
+<pre class="hljs"><code><div>SELECT column, another_column, …
+FROM mytable
+WHERE column IS/IS NOT NULL
+AND/OR another_condition
+AND/OR …;
+</div></code></pre>
+<h4 id="queries-with-expressions">Queries with expressions</h4>
+<p>You can use expressions to write more complex logic on column values in query.</p>
+<pre class="hljs"><code><div>SELECT speed / 2 AS half_speed
+FROM physics_data
+WHERE ABS(position) * 10.0 &gt; 500;
+</div></code></pre>
+<p>The use of expressions can save time and extra post-processing of the result data, but can also make the query harder to read, so we recommend that when expressions are used in the SELECT part of the query, that they are also given a descriptive alias using the AS keyword.</p>
+<p>In addition to expressions, regular columns and even tables can also have aliases to make them easier to reference in the output and as a part of simplifying more complex queries.</p>
+<pre class="hljs"><code><div>SELECT column AS better_column_name, …
+FROM a_long_widgets_table_name AS mywidgets
+INNER JOIN widget_sales
+  ON mywidgets.id = widget_sales.widget_id;
+</div></code></pre>
+<h4 id="queries-with-aggrergates">Queries with aggrergates</h4>
+<p>Aggregate expressions or functions allows you to summerize information about a group of rows of data.</p>
+<p>Here are some common aggregate functions that we are going to use in our examples:</p>
+<p><img src="images/sql3.png" alt="alt text"></p>
+<p>The <strong>GROUP BY</strong> clause works by grouping rows that have the same value in the column specified.</p>
+<p><strong>HAVING</strong> clause is used specifically with the GROUP BY clause to allow us to filter grouped rows from the result set. The HAVING clause constraints are written the same way as the WHERE clause constraints, and are applied to the grouped rows.</p>
+<pre class="hljs"><code><div>SELECT AGG_FUNC(column_or_expression) AS aggregate_description, …
+FROM mytable
+WHERE constraint_expression
+GROUP BY column
+HAVING group_condition;
+</div></code></pre>
+<h4 id="order-of-execution-of-a-query">Order of execution of a query</h4>
+<pre class="hljs"><code><div>5. SELECT 6. DISTINCT column, AGG_FUNC(column_or_expression), …
+1.FROM mytable
+1.JOIN another_table
+      ON mytable.column = another_table.column
+2. WHERE constraint_expression
+3. GROUP BY column
+4. HAVING constraint_expression
+7. ORDER BY column ASC/DESC
+8. LIMIT count OFFSET COUNT;
+</div></code></pre>
+<p>Each query begins with finding the data that we need in a database, and then filtering that data down into something that can be processed and understood as quickly as possible. Because each part of the query is executed sequentially, it's important to understand the order of execution so that you know what results are accessible where.</p>
+<h3 id="sql-schema">SQL Schema</h3>
+<p>In SQL, the database <strong>schema</strong> is what describes the structure of each table, and the datatypes that each column of the table can contain. (e.g. year column must be an Integer, title column must be a String).</p>
+<p>A table is a two-dimensional set of rows and columns, with the columns being the properties and the rows being instances of the entity in the table.</p>
+<h3 id="inserting-rows">Inserting rows</h3>
+<p>When inserting data into a database, each row of data you insert should contain values for every corresponding column in the table. You can insert multiple rows at a time by just listing them sequentially.</p>
+<pre class="hljs"><code><div>INSERT INTO mytable
+VALUES (value_or_expr, another_value_or_expr, ...),
+    (value_or_expr2, another_value_or_expr2, ...);
+
+
+INSERT INTO boxoffice
+ (movie_id, rating, sales_in_millions)
+ VALUES (1, 9.9, 283);
+</div></code></pre>
+<h3 id="updating-rows">Updating rows</h3>
+<p>Updating data. You have to specify exactly which table, columns and rows to update.</p>
+<pre class="hljs"><code><div>UPDATE mytable
+SET column = value_or_expr,
+    other_column = another_value_or_exp,
+    ...
+WHERE condition;
+</div></code></pre>
+<p>WHERE clause: important to use, always write the constraint first and test it in a SELECT query to make sure you are updating the right rows. Otherwise you can update all rows by mistake.</p>
+<h3 id="deleting-rows">Deleting rows</h3>
+<pre class="hljs"><code><div>DELETE FROM mytable
+WHERE condition;
+</div></code></pre>
+<p>If you leave out WHERE constraint, then all rows are removed, it clears out a table completely.</p>
+<p>Tip: before you delete, run the constraint in a SELECT query first to ensure you are removing the right rows.</p>
+<h3 id="creating-table">Creating table</h3>
+<pre class="hljs"><code><div>CREATE TABLE IF NOT EXISTS mytable (
+    column DataType TableConstraint DEFAULT default_value,
+    another_column DataType TableConstraint DEFAULT default_value,
+    …
+);
+</div></code></pre>
+<p>If there already exists a table with the same name, the SQL implementation will usually throw an error, so to suppress the error and skip creating a table if one exists, you can use the IF NOT EXISTS clause.</p>
+<h4 id="data-types">Data types</h4>
+<ul>
+<li>
+<p>INTEGER: whole integer values / BOOLEAN: 0 or 1</p>
+</li>
+<li>
+<p>FLOAT, DOUBLE, REAL: more precise numerical data</p>
+</li>
+<li>
+<p>CHARACTER, VARCHAR, TEXT: text based datatypes</p>
+</li>
+<li>
+<p>DATE, DATETIME</p>
+</li>
+<li>
+<p>BLOB: sql store binary data in blobs</p>
+</li>
+</ul>
+<h4 id="table-constraints">Table Constraints</h4>
+<p>Each column can have additional table constraints on it which limit what values can be inserted into that column.</p>
+<ul>
+<li>
+<p>PRIMARY KEY: The values in this column are unique, and each value can be used to identify a single row in this table. (e.g. auto-increment integer -space efficient -, but can be string or hashed value, as long as they are unique)</p>
+</li>
+<li>
+<p>AUTOINCREMENT: The value is automatically filled in and incremented with each row insertion</p>
+</li>
+<li>
+<p>UNIQUE: Values in this column have to be unique, so you can't insert another row with the same value in this column</p>
+</li>
+<li>
+<p>NOT NULL: The inserted value can not be NULL.</p>
+</li>
+<li>
+<p>CHECK (expression): This allows you to run a more complex expression to test whether the values inserted are valid. For example, you can check that values are positive, or greater than a specific size, or start with a certain prefix, etc.</p>
+</li>
+<li>
+<p>FOREIGN KEY: This is a consistency check which ensures that each value in this column corresponds to another value in a column in another table.</p>
+</li>
+</ul>
+<h4 id="example">Example</h4>
+<pre class="hljs"><code><div>CREATE TABLE movies (
+    id INTEGER PRIMARY KEY,
+    title TEXT,
+    director TEXT,
+    year INTEGER, 
+    length_minutes INTEGER
+);
+</div></code></pre>
+<h3 id="altering-tables">Altering tables</h3>
+<pre class="hljs"><code><div>ALTER TABLE mytable;
+</div></code></pre>
+<p>It provides a way to update the corresponding tables and database schemas by using the ALTER TABLE statement to add, remove or modify columns and table constraints.</p>
+<h4 id="adding-columns">Adding columns</h4>
+<pre class="hljs"><code><div>ALTER TABLE mytable
+ADD COLUMN ColumnName DataType DEFAULT default_value;
+</div></code></pre>
+<h4 id="removing-columns">Removing columns</h4>
+<pre class="hljs"><code><div>ALTER TABLE mytable
+DROP column_to_be_deleted;
+</div></code></pre>
+<h4 id="renaming-the-table">Renaming the table</h4>
+<pre class="hljs"><code><div>ALTER TABLE mytable
+RENAME TO new_table_name;
+</div></code></pre>
+<h3 id="remove-table">Remove table</h3>
+<pre class="hljs"><code><div>DROP TABEL IF EXISTS mytable;
+</div></code></pre>
+<p>To remove an entire table including all of its data and metadata. It also removes the table schema from the database entirily. (Compare to DELETE)</p>
+<p><strong>IF EXISTS</strong>  clause: the database may throw an error if the specified table does not exists and to avoid this error we use IF EXISTS clause.</p>
+<p>In addition, if you have another table that is dependent on columns in table you are removing (for example, with a FOREIGN KEY dependency) then you will have to either update all dependent tables first to remove the dependent rows or to remove those tables entirely.</p>
+
+</body>
+</html>
