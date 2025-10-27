@@ -1,6 +1,6 @@
 # Introduction to SQL with an Online Shop
 
-## Getting started with SQL for Online Shopping
+## 1. Getting started with SQL for Online Shopping
 
 ### Exploring Databases and Relational Data Structure
 
@@ -20,6 +20,23 @@ executing this command returns a list of all tables in your current database.
 - Comments: - single-line comments: -- this command lists all tables
             - multi-line comments: /* this is useful for longer explanations*/
 
+
+#### DESCRIBE: 
+```
+DESCRIBE Products;
+
+-- Describe the table structures
+/* Output: 
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| product_id    | int           | NO   | PRI | NULL    |       |
+| product_name  | varchar(255)  | NO   |     | NULL    |       |
+| product_price | decimal(10,2) | NO   |     | NULL    |       |
+| category_id   | int           | YES  | MUL | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+*/
+```
 
 ### Navigating the SQL SELECT Statement
 
@@ -81,7 +98,7 @@ ORDER BY product_name ASC, product_id ASC;
 product_id is the secondary sort column, ensuring consistent order for rows with the same product_name.
 
 
-## Learning SQL JOINS with Online Shopping 
+## 2. Learning SQL JOINS with Online Shopping 
 
 - SQL JOINs are techniques to combine data from two or more tables based on a shared column between them. They help in extracting valuable information that might be distributed across multiple tables. 
 
@@ -128,10 +145,113 @@ RIGHT JOIN OrderItems ON Products.product_id = OrderItems.product_id
 WHERE Products.product_id IS NULL AND Products.category_id=1;
 ```
 
+## 3. Mastering SQL Functions and Clauses 
+
+### Mastering the COUNT function
+
+**COUNT** function in SQL is used to return the number of rows that match a specified condition. It can also be used without any condition to count all rows in a table. It is a simple yet powerful tool for performing quantitative analysis on data.
+
+The **COUNT** function is commonly used in the following scenarios:
+
+- Counting the total number of rows in a table.
+- Counting the number of unique entries.
+- Counting the number of entries that satisfy a particular condition.
+
+```
+SELECT COUNT(column_name) FROM table_name WHERE condition;
+
+SELECT COUNT(*) FROM table_name;
+```
+COUNT(column_name): The **COUNT** function, which takes a column name as an argument.
+
+
+Difference Between **COUNT(*) and COUNT(column_name)**:
+- COUNT(*): Counts all rows in the table, including rows with NULL values in any column.
+- COUNT(column_name): Counts only non-NULL values in the specified column.
+
+
+**Example:** we want to count the number of orders that have been processed.
+```
+SELECT COUNT(*) 
+FROM Orders 
+WHERE order_status = 'Processed';
+
+-- Output: 156, this query would count the total number of rows in the Orders table where the order_status is 'Processed'.
+```
+### DISTINCT 
+It is a powerful keyword / clause which helps us remove duplicates and present a clean, unique list of values. 
+```
+SELECT DISTINCT column_name FROM table_name;
+```
+
+When using DISTINCT, it's important to remember that fetching unique values from large datasets can be time-consuming and slow down your queries. Therefore, always consider the performance implications and use DISTINCT only when necessary.
+
+### Aggregate Functions in SQL
+- **SUM** function is an aggregate operation in SQL, used to calculate the total sum of a numerical column in a database. Think of it as a mathematical operation that adds up all the numbers in a set.
+
+```
+SELECT SUM(expression) FROM table_name;
+```
+**SUM(expression)**: The SUM() function expects an argument to specify what to sum. The correct usage is SUM(expression), where the expression is typically a column name or a numerical value, such as SUM(column_name) to sum up values from a specific column.
+
+```
+SELECT Products.category_id, SUM(1) AS TotalItemsSold
+FROM OrderItems
+JOIN Products ON OrderItems.product_id = Products.product_id
+GROUP BY Products.category_id;
+
+-- Output:
+-- | category_id | TotalItemsSold |
+-- |-------------|----------------|
+-- |           1 |            270 |
+-- |           2 |             60 |
+-- |           3 |            120 |
+-- |           4 |             60 |
+-- |           5 |             90 |
+```
+
+```SELECT Products.category_id, SUM(1) AS TotalItemsSold```: 
+
+In this query, SUM(1) is used to count the number of items sold for each product category. This utilizes the SUM() function in a straightforward manner to aggregate the total count of items sold by category. This part of the query selects rows separately for each group according to the category_id from the Products table and calculates the total number of items sold by summing 1 for each sold item in the group.
+
+```GROUP BY Products.category_id```: 
+
+Finally, we use the GROUP BY clause to group the total items sold by product categories.
+
+**Some tips for using SUM():**
+- Bear in mind that SUM works with numerical data. Using it on non-numerical columns will result in errors.
+- The AS keyword, as seen in the code, can make your output more readable by renaming the result of our SUM operation. Don’t forget to use it as necessary.
+
+
+**Let's also see the difference between using SUM(1) and COUNT(*):**
+
+- **SUM(1)**: Adds the value 1 for each row, effectively counting rows within each group when used with GROUP BY. It's a creative use of the SUM function.
+
+- **COUNT(*)**: Directly counts all rows in the result set, including those with NULL values, and is typically more straightforward for counting rows.
+In this lesson's context, both SUM(1) and COUNT(*) achieve the same result.
+
+### GROUP BY clause
+
+The **GROUP BY** clause is used in collaboration with aggregate functions such as COUNT, SUM etc., to group the result-set by one or more columns. 
+```
+SELECT column_name, aggregate_function(column_name) AS alias_name
+FROM table_name
+GROUP BY column_name;
+```
 
 
 
+```
+-- TODO: Select all orders placed after the year 2021 with extended support and count the total number of such orders
 
+-- group by order date and order by order date in descending order
+
+
+SELECT YEAR(order_date) AS Year, COUNT(1) AS TotalNumberOfOrders 
+FROM Orders JOIN OrderItems ON Orders.order_id=OrderItems.order_id
+WHERE OrderItems.extended_support=1 AND YEAR(order_date) > 2021
+GROUP BY YEAR(order_date);
+```
 
 
 
